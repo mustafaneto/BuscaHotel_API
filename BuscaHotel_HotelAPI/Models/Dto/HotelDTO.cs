@@ -9,5 +9,9 @@ namespace BuscaHotel_HotelAPI.Models.Dto
         [Required]
         [MaxLength(80)]
         public string Nome { get; set; }
+
+        public float Diaria { get; set; }
+
+        public string Endereco { get; set; }
     }
 }
