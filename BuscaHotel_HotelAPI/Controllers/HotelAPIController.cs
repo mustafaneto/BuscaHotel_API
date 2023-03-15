@@ -4,6 +4,8 @@ using BuscaHotel_HotelAPI.Models;
 using BuscaHotel_HotelAPI.Models.Dto;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Reflection.Metadata.Ecma335;
 
 namespace BuscaHotel_HotelAPI.Controllers
@@ -13,12 +15,13 @@ namespace BuscaHotel_HotelAPI.Controllers
     public class HotelAPIController : ControllerBase
     {
         private readonly ILogging _logger;
+        private readonly ApplicationDbContext _db;
 
-        public HotelAPIController(ILogging logger)
+        public HotelAPIController(ApplicationDbContext db, ILogging logger)
         {
+            _db = db;
             _logger = logger;
         }
-
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -26,7 +29,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         public ActionResult <IEnumerable<HotelDTO>> GetHoteis()
         {
                 _logger.Log("Exibindo todos os hoteis", "");
-                return Ok (HotelStore.hotelList);
+                return Ok (_db.Hoteis.ToList());
         }
 
         [HttpGet("{id:int}", Name = "CreateHotel")]
@@ -42,7 +45,7 @@ namespace BuscaHotel_HotelAPI.Controllers
                 return BadRequest();
             }
 
-            var hotel = HotelStore.hotelList.FirstOrDefault(u => u.Id == id);
+            var hotel = _db.Hoteis.FirstOrDefault(u => u.Id == id);
             if (hotel == null)
             {
                 return NotFound();
@@ -59,7 +62,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         public ActionResult<HotelDTO> CreateHotel([FromBody]HotelDTO hotelDTO) 
         {
 
-            if(HotelStore.hotelList.FirstOrDefault(u=>u.Nome.ToLower()==hotelDTO.Nome.ToLower())!=null)
+            if(_db.Hoteis.FirstOrDefault(u=>u.Nome.ToLower()==hotelDTO.Nome.ToLower())!=null)
             {
                 ModelState.AddModelError("CustomError", "Hotel já existe!");
                 return BadRequest(ModelState);
@@ -72,8 +75,20 @@ namespace BuscaHotel_HotelAPI.Controllers
             { 
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            hotelDTO.Id = HotelStore.hotelList.OrderByDescending(u => u.Id).FirstOrDefault().Id+1;
-            HotelStore.hotelList.Add(hotelDTO);
+
+            Hotel model = new()
+            {
+                Servicos = hotelDTO.Servicos,
+                Descricao = hotelDTO.Descricao,
+                Id = hotelDTO.Id,
+                ImagemUrl = hotelDTO.ImagemUrl,
+                Nome = hotelDTO.Nome,
+                Ocupacao = hotelDTO.Ocupacao,
+                Diaria = hotelDTO.Diaria,
+                Area = hotelDTO.Area
+            };
+            _db.Hoteis.Add(model);
+            _db.SaveChanges();
 
             return CreatedAtRoute("CreateHotel", new { id = hotelDTO.Id } , hotelDTO);
 
@@ -90,12 +105,13 @@ namespace BuscaHotel_HotelAPI.Controllers
             {
                 return BadRequest();
             }
-            var hotel = HotelStore.hotelList.FirstOrDefault(u => u.Id == id);
+            var hotel = _db.Hoteis.FirstOrDefault(u => u.Id == id);
             if (hotel == null)
             {
                 return NotFound();
             }
-            HotelStore.hotelList.Remove(hotel);
+            _db.Hoteis.Remove(hotel);
+            _db.SaveChanges();
             return NoContent();
         }
 
@@ -110,11 +126,21 @@ namespace BuscaHotel_HotelAPI.Controllers
             {
                 return BadRequest();
             }
-            var hotel = HotelStore.hotelList.FirstOrDefault(u => u.Id == id);
-            hotel.Nome = hotelDTO.Nome;
-            hotel.Diaria = hotelDTO.Diaria;
-            hotel.Endereco = hotelDTO.Endereco;
 
+            Hotel model = new()
+            {
+                Servicos = hotelDTO.Servicos,
+                Descricao = hotelDTO.Descricao,
+                Id = hotelDTO.Id,
+                ImagemUrl = hotelDTO.ImagemUrl,
+                Nome = hotelDTO.Nome,
+                Ocupacao = hotelDTO.Ocupacao,
+                Diaria = hotelDTO.Diaria,
+                Area = hotelDTO.Area
+            };
+
+            _db.Hoteis.Update(model);
+            _db.SaveChanges();
             return NoContent();
         }
 
@@ -128,12 +154,41 @@ namespace BuscaHotel_HotelAPI.Controllers
             {
                 return BadRequest();
             }
-            var hotel = HotelStore.hotelList.FirstOrDefault(u => u.Id == id);
+            var hotel = _db.Hoteis.AsNoTracking().FirstOrDefault(u => u.Id == id);
+
+            HotelDTO hotelDTO = new()
+            {
+                Servicos = hotel.Servicos,
+                Descricao = hotel.Descricao,
+                Id = hotel.Id,
+                ImagemUrl = hotel.ImagemUrl,
+                Nome = hotel.Nome,
+                Ocupacao = hotel.Ocupacao,
+                Diaria = hotel.Diaria,
+                Area = hotel.Area
+            };
+
             if (hotel == null)
             {
                 return BadRequest();
             }
-            patchDTO.ApplyTo(hotel, ModelState);
+            patchDTO.ApplyTo(hotelDTO, ModelState);
+
+            Hotel model = new Hotel()
+            {
+                Servicos = hotelDTO.Servicos,
+                Descricao = hotelDTO.Descricao,
+                Id = hotelDTO.Id,
+                ImagemUrl = hotelDTO.ImagemUrl,
+                Nome = hotelDTO.Nome,
+                Ocupacao = hotelDTO.Ocupacao,
+                Diaria = hotelDTO.Diaria,
+                Area = hotelDTO.Area
+            };
+
+            _db.Hoteis.Update(model);
+            _db.SaveChanges();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

@@ -1,17 +1,16 @@
 
+using BuscaHotel_HotelAPI.Data;
 using BuscaHotel_HotelAPI.Logging;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-/*
- * Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("log/hotelLogs.txt", rollingInterval: RollingInterval.Day).CreateLogger();
-
-builder.Host.UseSerilog();
-*/
-
-
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
+{
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
+});
 builder.Services.AddControllers(option =>
 {
     //option.ReturnHttpNotAcceptable=true;
