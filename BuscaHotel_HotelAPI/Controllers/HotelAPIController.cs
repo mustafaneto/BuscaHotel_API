@@ -1,4 +1,5 @@
 ﻿using BuscaHotel_HotelAPI.Data;
+using BuscaHotel_HotelAPI.Logging;
 using BuscaHotel_HotelAPI.Models;
 using BuscaHotel_HotelAPI.Models.Dto;
 using Microsoft.AspNetCore.JsonPatch;
@@ -11,11 +12,20 @@ namespace BuscaHotel_HotelAPI.Controllers
     [ApiController]
     public class HotelAPIController : ControllerBase
     {
+        private readonly ILogging _logger;
+
+        public HotelAPIController(ILogging logger)
+        {
+            _logger = logger;
+        }
+
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
         public ActionResult <IEnumerable<HotelDTO>> GetHoteis()
         {
+                _logger.Log("Exibindo todos os hoteis", "");
                 return Ok (HotelStore.hotelList);
         }
 
@@ -28,6 +38,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         {
             if (id == 0)
             {
+                _logger.Log("Tente um Id diferente de " + id, "error" );
                 return BadRequest();
             }
 

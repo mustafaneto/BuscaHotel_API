@@ -1,14 +1,26 @@
+
+using BuscaHotel_HotelAPI.Logging;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+/*
+ * Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("log/hotelLogs.txt", rollingInterval: RollingInterval.Day).CreateLogger();
+
+builder.Host.UseSerilog();
+*/
+
+
 builder.Services.AddControllers(option =>
 {
-    option.ReturnHttpNotAcceptable=true;
+    //option.ReturnHttpNotAcceptable=true;
 }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<ILogging, Logging>();
 
 var app = builder.Build();
 
