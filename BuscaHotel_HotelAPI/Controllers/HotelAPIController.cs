@@ -26,10 +26,10 @@ namespace BuscaHotel_HotelAPI.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public ActionResult <IEnumerable<HotelDTO>> GetHoteis()
+        public async Task<ActionResult <IEnumerable<HotelDTO>>> GetHoteis()
         {
                 _logger.Log("Exibindo todos os hoteis", "");
-                return Ok (_db.Hoteis.ToList());
+                return Ok (await _db.Hoteis.ToListAsync());
         }
 
         [HttpGet("{id:int}", Name = "CreateHotel")]
@@ -37,7 +37,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public ActionResult <HotelDTO> GetHotel(int id)
+        public async Task<ActionResult <HotelDTO>> GetHotel(int id)
         {
             if (id == 0)
             {
@@ -45,7 +45,7 @@ namespace BuscaHotel_HotelAPI.Controllers
                 return BadRequest();
             }
 
-            var hotel = _db.Hoteis.FirstOrDefault(u => u.Id == id);
+            var hotel = await _db.Hoteis.FirstOrDefaultAsync(u => u.Id == id);
             if (hotel == null)
             {
                 return NotFound();
@@ -59,10 +59,10 @@ namespace BuscaHotel_HotelAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public ActionResult<HotelDTO> CreateHotel([FromBody]HotelDTO hotelDTO) 
+        public async Task<ActionResult<HotelDTO>> CreateHotel([FromBody]HotelCreateDTO hotelDTO) 
         {
 
-            if(_db.Hoteis.FirstOrDefault(u=>u.Nome.ToLower()==hotelDTO.Nome.ToLower())!=null)
+            if(await _db.Hoteis.FirstOrDefaultAsync(u=>u.Nome.ToLower()==hotelDTO.Nome.ToLower())!=null)
             {
                 ModelState.AddModelError("CustomError", "Hotel já existe!");
                 return BadRequest(ModelState);
@@ -71,26 +71,25 @@ namespace BuscaHotel_HotelAPI.Controllers
             {
                 return BadRequest(hotelDTO);
             }
-            if (hotelDTO.Id > 0) 
-            { 
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            //if (hotelDTO.Id > 0) 
+            //{ 
+            //    return StatusCode(StatusCodes.Status500InternalServerError);
+            //}
 
             Hotel model = new()
             {
                 Servicos = hotelDTO.Servicos,
                 Descricao = hotelDTO.Descricao,
-                Id = hotelDTO.Id,
                 ImagemUrl = hotelDTO.ImagemUrl,
                 Nome = hotelDTO.Nome,
                 Ocupacao = hotelDTO.Ocupacao,
                 Diaria = hotelDTO.Diaria,
                 Area = hotelDTO.Area
             };
-            _db.Hoteis.Add(model);
-            _db.SaveChanges();
+            await _db.Hoteis.AddAsync(model);
+            await _db.SaveChangesAsync();
 
-            return CreatedAtRoute("CreateHotel", new { id = hotelDTO.Id } , hotelDTO);
+            return CreatedAtRoute("CreateHotel", new { id = model.Id } , model);
 
         }
 
@@ -99,19 +98,19 @@ namespace BuscaHotel_HotelAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id:int}", Name = "DeleteHotel")]
 
-        public IActionResult DeleteHotel(int id)
+        public async Task<IActionResult> DeleteHotel(int id)
         {
             if(id == 0)
             {
                 return BadRequest();
             }
-            var hotel = _db.Hoteis.FirstOrDefault(u => u.Id == id);
+            var hotel = await _db.Hoteis.FirstOrDefaultAsync(u => u.Id == id);
             if (hotel == null)
             {
                 return NotFound();
             }
             _db.Hoteis.Remove(hotel);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return NoContent();
         }
 
@@ -120,7 +119,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult UpdateHotel(int id, [FromBody]HotelDTO hotelDTO)
+        public async Task<IActionResult> UpdateHotel(int id, [FromBody]HotelUpdateDTO hotelDTO)
         {
             if (hotelDTO == null || id != hotelDTO.Id)
             {
@@ -140,7 +139,7 @@ namespace BuscaHotel_HotelAPI.Controllers
             };
 
             _db.Hoteis.Update(model);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return NoContent();
         }
 
@@ -148,15 +147,15 @@ namespace BuscaHotel_HotelAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult UpdatePartialHotel(int id, JsonPatchDocument<HotelDTO> patchDTO)
+        public async Task<IActionResult> UpdatePartialHotel(int id, JsonPatchDocument<HotelUpdateDTO> patchDTO)
         {
             if (patchDTO == null || id == 0)
             {
                 return BadRequest();
             }
-            var hotel = _db.Hoteis.AsNoTracking().FirstOrDefault(u => u.Id == id);
+            var hotel = await _db.Hoteis.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
 
-            HotelDTO hotelDTO = new()
+            HotelUpdateDTO hotelDTO = new()
             {
                 Servicos = hotel.Servicos,
                 Descricao = hotel.Descricao,
@@ -187,7 +186,7 @@ namespace BuscaHotel_HotelAPI.Controllers
             };
 
             _db.Hoteis.Update(model);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             if (!ModelState.IsValid)
             {
