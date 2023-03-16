@@ -1,4 +1,5 @@
 
+using BuscaHotel_HotelAPI;
 using BuscaHotel_HotelAPI.Data;
 using BuscaHotel_HotelAPI.Logging;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
+builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddControllers(option =>
 {
     //option.ReturnHttpNotAcceptable=true;
