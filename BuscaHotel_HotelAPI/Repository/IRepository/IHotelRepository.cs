@@ -3,15 +3,8 @@ using System.Linq.Expressions;
 
 namespace BuscaHotel_HotelAPI.Repository.IRepository
 {
-    public interface IHotelRepository
+    public interface IHotelRepository : IRepository<Hotel>
     {
-        Task<List<Hotel>> GetAllAsync(Expression<Func<Hotel, bool>> filter = null);
-
-        Task<Hotel> GetAsync(Expression<Func<Hotel, bool>> filter = null, bool tracked = true);
-
-        Task CreateAsync(Hotel entity);
-        Task UpdateAsync(Hotel entity);
-        Task RemoveAsync(Hotel entity);
-        Task SaveAsync();
+        Task<Hotel> UpdateAsync(Hotel entity);
     }
 }
