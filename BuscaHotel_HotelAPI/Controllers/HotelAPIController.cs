@@ -3,6 +3,7 @@ using BuscaHotel_HotelAPI.Data;
 using BuscaHotel_HotelAPI.Logging;
 using BuscaHotel_HotelAPI.Models;
 using BuscaHotel_HotelAPI.Models.Dto;
+using BuscaHotel_HotelAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,13 @@ namespace BuscaHotel_HotelAPI.Controllers
     public class HotelAPIController : ControllerBase
     {
         private readonly ILogging _logger;
-        private readonly ApplicationDbContext _db;
+
+        private readonly IHotelRepository _dbHotel;
         private readonly IMapper _mapper;
 
-        public HotelAPIController(ApplicationDbContext db, ILogging logger, IMapper mapper)
+        public HotelAPIController(IHotelRepository dbHotel, ILogging logger, IMapper mapper)
         {
-            _db = db;
+            _dbHotel = dbHotel;
             _logger = logger;
             _mapper = mapper;
         }
@@ -33,7 +35,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         public async Task<ActionResult <IEnumerable<HotelDTO>>> GetHoteis()
         {
                 _logger.Log("Exibindo todos os hoteis", "");
-                IEnumerable<Hotel> hotelList = await _db.Hoteis.ToListAsync();
+                IEnumerable<Hotel> hotelList = await _dbHotel.GetAllAsync();
                 return Ok (_mapper.Map<List<HotelDTO>>(hotelList));
         }
 
@@ -50,7 +52,7 @@ namespace BuscaHotel_HotelAPI.Controllers
                 return BadRequest();
             }
 
-            var hotel = await _db.Hoteis.FirstOrDefaultAsync(u => u.Id == id);
+            var hotel = await _dbHotel.GetAsync(u => u.Id == id);
             if (hotel == null)
             {
                 return NotFound();
@@ -67,7 +69,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         public async Task<ActionResult<HotelDTO>> CreateHotel([FromBody]HotelCreateDTO createDTO) 
         {
 
-            if(await _db.Hoteis.FirstOrDefaultAsync(u=>u.Nome.ToLower()== createDTO.Nome.ToLower())!=null)
+            if(await _dbHotel.GetAsync(u=>u.Nome.ToLower()== createDTO.Nome.ToLower())!=null)
             {
                 ModelState.AddModelError("CustomError", "Hotel já existe!");
                 return BadRequest(ModelState);
@@ -79,8 +81,7 @@ namespace BuscaHotel_HotelAPI.Controllers
 
             Hotel model = _mapper.Map<Hotel>(createDTO);
 
-            await _db.Hoteis.AddAsync(model);
-            await _db.SaveChangesAsync();
+            await _dbHotel.CreateAsync(model);
 
             return CreatedAtRoute("CreateHotel", new { id = model.Id } , model);
 
@@ -97,13 +98,12 @@ namespace BuscaHotel_HotelAPI.Controllers
             {
                 return BadRequest();
             }
-            var hotel = await _db.Hoteis.FirstOrDefaultAsync(u => u.Id == id);
+            var hotel = await _dbHotel.GetAsync(u => u.Id == id);
             if (hotel == null)
             {
                 return NotFound();
             }
-            _db.Hoteis.Remove(hotel);
-            await _db.SaveChangesAsync();
+            await _dbHotel.RemoveAsync(hotel);
             return NoContent();
         }
 
@@ -121,8 +121,8 @@ namespace BuscaHotel_HotelAPI.Controllers
 
             Hotel model = _mapper.Map<Hotel>(updateDTO);
 
-            _db.Hoteis.Update(model);
-            await _db.SaveChangesAsync();
+            await _dbHotel.UpdateAsync(model);
+
             return NoContent();
         }
 
@@ -136,7 +136,7 @@ namespace BuscaHotel_HotelAPI.Controllers
             {
                 return BadRequest();
             }
-            var hotel = await _db.Hoteis.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            var hotel = await _dbHotel.GetAsync(u => u.Id == id, tracked:false);
 
             HotelUpdateDTO hotelDTO = _mapper.Map<HotelUpdateDTO>(hotel);
 
@@ -148,8 +148,7 @@ namespace BuscaHotel_HotelAPI.Controllers
 
             Hotel model = _mapper.Map<Hotel>(hotelDTO);
 
-            _db.Hoteis.Update(model);
-            await _db.SaveChangesAsync();
+            await _dbHotel.UpdateAsync(model);
 
             if (!ModelState.IsValid)
             {
