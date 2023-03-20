@@ -4,6 +4,7 @@ using BuscaHotel_HotelAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BuscaHotel_HotelAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230317172824_AddHotelNumberToDb")]
+    partial class AddHotelNumberToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +74,7 @@ namespace BuscaHotel_HotelAPI.Migrations
                             Id = 1,
                             Area = 500,
                             DataAtualizacao = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DataCriacao = new DateTime(2023, 3, 20, 11, 34, 55, 887, DateTimeKind.Local).AddTicks(347),
+                            DataCriacao = new DateTime(2023, 3, 17, 14, 28, 24, 626, DateTimeKind.Local).AddTicks(3532),
                             Descricao = "O hotel localizado em Rio Branco, Acre, próximo ao shopping e supermercados é uma excelente opção para quem busca conforto e conveniência durante a estadia na cidade. Com a sua localização privilegiada, os hóspedes têm fácil acesso a diversas opções de compras, alimentação e entretenimento.",
                             Diaria = 200.0,
                             ImagemUrl = "https://static.showit.co/800/vtY9NPGcQUynJd1xRFSrOg/72275/gina_and_ryan_photography_-_acre_2017_-_064.jpg",
@@ -84,7 +87,7 @@ namespace BuscaHotel_HotelAPI.Migrations
                             Id = 2,
                             Area = 900,
                             DataAtualizacao = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DataCriacao = new DateTime(2023, 3, 20, 11, 34, 55, 887, DateTimeKind.Local).AddTicks(358),
+                            DataCriacao = new DateTime(2023, 3, 17, 14, 28, 24, 626, DateTimeKind.Local).AddTicks(3551),
                             Descricao = "Localizado na cidade de Cruzeiro do Sul, Acre, este hotel é uma excelente opção para quem busca conforto e praticidade. Com quartos amplos e bem equipados, o hotel oferece um ambiente agradável e acolhedor para os hóspedes. Além disso, conta com uma área de lazer com piscina, sauna e academia, tornando a estadia ainda mais relaxante.",
                             Diaria = 500.0,
                             ImagemUrl = "https://goop-img.com/wp-content/uploads/2018/01/Gina-Ryan-Photography-Acre-2017-032.jpg",
@@ -97,7 +100,7 @@ namespace BuscaHotel_HotelAPI.Migrations
                             Id = 3,
                             Area = 750,
                             DataAtualizacao = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DataCriacao = new DateTime(2023, 3, 20, 11, 34, 55, 887, DateTimeKind.Local).AddTicks(359),
+                            DataCriacao = new DateTime(2023, 3, 17, 14, 28, 24, 626, DateTimeKind.Local).AddTicks(3554),
                             Descricao = " O Sena Madureira Hotel está situado na cidade de Sena Madureira, Acre, e é ideal para quem busca um ambiente mais tranquilo e próximo à natureza. Com uma ampla área verde ao redor do hotel, os hóspedes podem desfrutar de uma atmosfera mais calma e agradável. Além disso, o hotel oferece atividades ao ar livre como trilhas ecológicas, pesca esportiva e passeios de barco.",
                             Diaria = 100.0,
                             ImagemUrl = "https://static.showit.co/1200/xVOR7ZFYQGqkRCPXUxMAIg/72275/acre_resort_pool.jpg",
@@ -110,7 +113,7 @@ namespace BuscaHotel_HotelAPI.Migrations
                             Id = 4,
                             Area = 800,
                             DataAtualizacao = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DataCriacao = new DateTime(2023, 3, 20, 11, 34, 55, 887, DateTimeKind.Local).AddTicks(361),
+                            DataCriacao = new DateTime(2023, 3, 17, 14, 28, 24, 626, DateTimeKind.Local).AddTicks(3557),
                             Descricao = "Localizado na cidade de Quinari, Acre, este hotel é uma excelente opção para quem procura um ambiente mais intimista e acolhedor. Com um design moderno e aconchegante, o hotel oferece quartos confortáveis e bem equipados. Além disso, conta com um restaurante que serve pratos típicos da culinária regional, proporcionando uma experiência gastronômica única aos hóspedes.",
                             Diaria = 250.0,
                             ImagemUrl = "https://static.showit.co/1200/8n7f7DqLRpG2flPGfuDCEA/72275/gina_and_ryan_photography_-_acre_2017_-_115_web.jpg",
@@ -123,7 +126,7 @@ namespace BuscaHotel_HotelAPI.Migrations
                             Id = 5,
                             Area = 400,
                             DataAtualizacao = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DataCriacao = new DateTime(2023, 3, 20, 11, 34, 55, 887, DateTimeKind.Local).AddTicks(362),
+                            DataCriacao = new DateTime(2023, 3, 17, 14, 28, 24, 626, DateTimeKind.Local).AddTicks(3559),
                             Descricao = "Situado na cidade de Brasileia, Acre, este hotel é ideal para quem busca um ambiente mais urbano e conectado. Com quartos modernos e bem equipados, o hotel oferece uma excelente estrutura para quem está a negócios ou lazer. Além disso, conta com uma localização privilegiada, próximo a restaurantes, bares e lojas, tornando a estadia ainda mais prática e conveniente.",
                             Diaria = 300.0,
                             ImagemUrl = "https://www.travelandleisure.com/thmb/C9j_ENR2mCCTAKr64UGCJY-ZLsM=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/bedroom-acre-baja-CABOHOTELMEZCAL0721-e39f5592b7fd45d6923018edd02d22ef.jpg",
@@ -148,25 +151,9 @@ namespace BuscaHotel_HotelAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("HotelID")
-                        .HasColumnType("int");
-
                     b.HasKey("HotelNo");
 
-                    b.HasIndex("HotelID");
-
                     b.ToTable("HotelNumbers");
-                });
-
-            modelBuilder.Entity("BuscaHotel_HotelAPI.Models.HotelNumber", b =>
-                {
-                    b.HasOne("BuscaHotel_HotelAPI.Models.Hotel", "Hotel")
-                        .WithMany()
-                        .HasForeignKey("HotelID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hotel");
                 });
 #pragma warning restore 612, 618
         }

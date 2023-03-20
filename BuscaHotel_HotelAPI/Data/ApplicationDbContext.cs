@@ -8,6 +8,8 @@ namespace BuscaHotel_HotelAPI.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Hotel> Hoteis { get; set; }
+        public DbSet<HotelNumber> HotelNumbers { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
