@@ -22,14 +22,16 @@ namespace BuscaHotel_HotelAPI.Controllers
 
         protected APIResponse _response;
         private readonly IHotelNumberRepository _dbHotelNumber;
+        private readonly IHotelRepository _dbHotel;
         private readonly IMapper _mapper;
 
-        public HotelNumberAPIController(IHotelNumberRepository dbHotelNumber, ILogging logger, IMapper mapper)
+        public HotelNumberAPIController(IHotelNumberRepository dbHotelNumber, ILogging logger, IMapper mapper, IHotelRepository dbHotel)
         {
             _dbHotelNumber = dbHotelNumber;
             _logger = logger;
             _mapper = mapper;
             this._response = new();
+            _dbHotel = dbHotel;
         }
 
         [HttpGet]
@@ -105,6 +107,13 @@ namespace BuscaHotel_HotelAPI.Controllers
                     ModelState.AddModelError("CustomError", "Numero de Hotel já existe!");
                     return BadRequest(ModelState);
                 }
+
+                if (await _dbHotel.GetAsync(u => u.Id == createDTO.HotelID) == null)
+                {
+                    ModelState.AddModelError("CustomError", "Hotel ID não é válido!");
+                    return BadRequest(ModelState);
+                }
+
                 if (createDTO == null)
                 {
                     return BadRequest(createDTO);
@@ -171,6 +180,11 @@ namespace BuscaHotel_HotelAPI.Controllers
                 if (updateDTO == null || id != updateDTO.HotelNo)
                 {
                     return BadRequest();
+                }
+                if (await _dbHotel.GetAsync(u => u.Id == updateDTO.HotelID) == null)
+                {
+                    ModelState.AddModelError("CustomError", "Hotel ID não é válido!");
+                    return BadRequest(ModelState);
                 }
 
                 HotelNumber model = _mapper.Map<HotelNumber>(updateDTO);
