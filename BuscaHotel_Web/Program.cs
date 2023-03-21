@@ -1,7 +1,16 @@
+using BuscaHotel_Web;
+using BuscaHotel_Web.Services;
+using BuscaHotel_Web.Services.IServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAutoMapper(typeof(MappingConfig));
+
+builder.Services.AddHttpClient<IHotelService, HotelService>();
+builder.Services.AddScoped<IHotelService, HotelService>();
+
 
 var app = builder.Build();
 
