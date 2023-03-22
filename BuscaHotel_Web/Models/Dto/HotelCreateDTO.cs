@@ -7,13 +7,13 @@ namespace BuscaHotel_Web.Models.Dto
         [Required]
         [MaxLength(30)]
         public string Nome { get; set; }
-        public string Descricao { get; set; }
+        public string? Descricao { get; set; }
 
         [Required]
         public double Diaria { get; set; }
         public int Ocupacao { get; set; }
         public int Area { get; set; }
-        public string ImagemUrl { get; set; }
-        public string Servicos { get; set; }
+        public string? ImagemUrl { get; set; }
+        public string? Servicos { get; set; }
     }
 }

@@ -1,0 +1,77 @@
+﻿@model BuscaHotel_Web.Models.Dto.HotelCreateDTO
+
+<form asp-action="CreateHotel">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-primary">Criar Hotel</h1>
+        <hr />
+
+        <div class="row">
+            <div class="col-2">
+                <label asp-for="Nome" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Diaria" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Diaria" class="form-control" />
+                <span asp-validation-for="Diaria" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Descricao" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <textarea asp-for="Descricao" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Ocupacao" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="Ocupacao" class="form-control" />
+                <span asp-validation-for="Ocupacao" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="ImagemUrl" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="ImagemUrl" class="form-control" />
+                <span asp-validation-for="ImagemUrl" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Area" class="control-label pt-2" style="font-size:20px;"></label>
+            </div> 
+            <div class="col-10 pb-3">
+                <input asp-for="Area" class="form-control" />
+                <span asp-validation-for="Area" class="text-danger"></span>
+            </div>
+
+            <div class="col-2">
+                <label asp-for="Servicos" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <textarea asp-for="Servicos" class="form-control"></textarea>
+                <span asp-validation-for="Servicos" class="text-danger"></span>
+            </div>
+            <div class="col-5 offset-2">
+                <a asp-action="IndexHotel" asp-controller="Hotel" class="btn-primary btn form-control">Voltar para lista</a>
+            </div>
+            <div class="col-5">
+                <input type="submit" value="Adicionar" class="btn btn-success form-control" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
