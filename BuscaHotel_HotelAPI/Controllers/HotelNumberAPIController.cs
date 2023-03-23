@@ -42,7 +42,7 @@ namespace BuscaHotel_HotelAPI.Controllers
             try
             {
                 _logger.Log("Exibindo todos os hoteis", "");
-                IEnumerable<HotelNumber> hotelNumberList = await _dbHotelNumber.GetAllAsync();
+                IEnumerable<HotelNumber> hotelNumberList = await _dbHotelNumber.GetAllAsync(includeProperties:"Hotel");
                 _response.Result = _mapper.Map<List<HotelNumberDTO>>(hotelNumberList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);

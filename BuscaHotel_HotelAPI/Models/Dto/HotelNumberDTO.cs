@@ -10,5 +10,6 @@ namespace BuscaHotel_HotelAPI.Models.Dto
         [Required]
         public int HotelID { get; set; }
         public string DetalhesEspeciais { get; set; }
+        public HotelDTO Hotel { get; set; }
     }
 }
