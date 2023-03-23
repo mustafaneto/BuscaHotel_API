@@ -53,5 +53,63 @@ namespace BuscaHotel_Web.Controllers
 
             return View(model);
         }
+
+        public async Task<IActionResult> UpdateHotel(int hotelId)
+        {
+            var response = await _hotelService.GetAsync<APIResponse>(hotelId);
+            if (response != null && response.IsSuccess)
+            {
+                HotelDTO model = JsonConvert.DeserializeObject<HotelDTO>(Convert.ToString(response.Result));
+                return View(_mapper.Map<HotelUpdateDTO>(model));
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> UpdateHotel(HotelUpdateDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _hotelService.UpdateAsync<APIResponse>(model);
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(IndexHotel));
+                }
+            }
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> DeleteHotel(int hotelId)
+        {
+            var response = await _hotelService.GetAsync<APIResponse>(hotelId);
+            if (response != null && response.IsSuccess)
+            {
+                HotelDTO model = JsonConvert.DeserializeObject<HotelDTO>(Convert.ToString(response.Result));
+                return View(model);
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> DeleteHotel(HotelDTO model)
+        {
+            
+                var response = await _hotelService.DeleteAsync<APIResponse>(model.Id);
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(IndexHotel));
+                }
+            
+
+            return View(model);
+        }
+
     }
 }

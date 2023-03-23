@@ -32,7 +32,7 @@ namespace BuscaHotel_Web.Services
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.DELETE,
-                Url = hotelUrl + "/api/hotelAPI/"+id
+                Url = hotelUrl + "/api/hotelAPI/"+ id
             });
         }
 
@@ -60,7 +60,7 @@ namespace BuscaHotel_Web.Services
             {
                 ApiType = SD.ApiType.PUT,
                 Data = dto,
-                Url = hotelUrl + "/api/hotelAPI" + dto.Id
+                Url = hotelUrl + "/api/hotelAPI/" + dto.Id
             });
         }
     }
