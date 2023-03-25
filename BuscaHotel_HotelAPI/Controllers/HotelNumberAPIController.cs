@@ -104,13 +104,13 @@ namespace BuscaHotel_HotelAPI.Controllers
             {
                 if (await _dbHotelNumber.GetAsync(u => u.HotelNo == createDTO.HotelNo) != null)
                 {
-                    ModelState.AddModelError("CustomError", "Numero de Hotel já existe!");
+                    ModelState.AddModelError("ErrorMessages", "Numero de Hotel já existe!");
                     return BadRequest(ModelState);
                 }
 
                 if (await _dbHotel.GetAsync(u => u.Id == createDTO.HotelID) == null)
                 {
-                    ModelState.AddModelError("CustomError", "Hotel ID não é válido!");
+                    ModelState.AddModelError("ErrorMessages", "Hotel ID não é válido!");
                     return BadRequest(ModelState);
                 }
 
@@ -183,7 +183,7 @@ namespace BuscaHotel_HotelAPI.Controllers
                 }
                 if (await _dbHotel.GetAsync(u => u.Id == updateDTO.HotelID) == null)
                 {
-                    ModelState.AddModelError("CustomError", "Hotel ID não é válido!");
+                    ModelState.AddModelError("ErrorMessages", "Hotel ID não é válido!");
                     return BadRequest(ModelState);
                 }
 

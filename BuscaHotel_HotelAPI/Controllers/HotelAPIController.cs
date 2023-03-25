@@ -102,7 +102,7 @@ namespace BuscaHotel_HotelAPI.Controllers
             {
                 if (await _dbHotel.GetAsync(u => u.Nome.ToLower() == createDTO.Nome.ToLower()) != null)
                 {
-                    ModelState.AddModelError("CustomError", "Hotel já existe!");
+                    ModelState.AddModelError("ErrorMessages", "Hotel já existe!");
                     return BadRequest(ModelState);
                 }
                 if (createDTO == null)

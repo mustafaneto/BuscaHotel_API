@@ -1,8 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using Microsoft.AspNetCore.Components;
+@model IEnumerable<BuscaHotel_Web.Models.Dto.HotelDTO>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<img class="d-block w-100" src="images/home/slide1.jpg" alt="" />
+<hr />
+<div class="row" style="--bs-gutter-x:0">
+    @foreach(var hotel in Model)
+    {
+        <div class="p-4 col-md-12 col-lg-6">
+            <div class="row" style="border-radius:20px; border:1px solid #ffffff">
+                <div class="col-4">
+                    <img class="d-block w-100" style="border-radius:20px;" src="@hotel.ImagemUrl" alt="First slide" />
+                </div>
+                <div class="col-8">
+                    <p class="card-title text-warning" style="font-size:xx-large">@hotel.Nome</p>
+                    <p class="card-text">
+                        @((MarkupString)hotel.Descricao)
+                    </p>
+                </div>
+                <div class="col-12">
+                    <div class="row pb-3 pt-2">
+                        <div class="col-4">
+                            <a href="" class="btn btn-success form-control btn-block">Reservar</a>
+                        </div>
+                        <div class="col-4">
+                            <span class="">Máxima Ocupação : @hotel.Ocupacao adultos</span><br />
+                            <span class="pt-1">Tamanho : @hotel.Area m2</span><br/> 
+                        </div>
+                        <div class="col-4">
+                            <span class="text-warning float-end font-weight-bold pt-1" style="font-size:25px;">
+                                Diária
+                                <span style="border-bottom:1px solid #ff6a00">
+                                    @hotel.Diaria.ToString("c")
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>

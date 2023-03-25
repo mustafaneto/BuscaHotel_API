@@ -47,10 +47,11 @@ namespace BuscaHotel_Web.Controllers
                 var response = await _hotelService.CreateAsync<APIResponse>(model);
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = "Hotel criado com sucesso";
                     return RedirectToAction(nameof(IndexHotel));
                 }
             }
-
+            TempData["error"] = "Erro encontrado";
             return View(model);
         }
 
@@ -73,6 +74,7 @@ namespace BuscaHotel_Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                TempData["success"] = "Hotel atualizado com sucesso";
                 var response = await _hotelService.UpdateAsync<APIResponse>(model);
                 if (response != null && response.IsSuccess)
                 {
@@ -80,6 +82,7 @@ namespace BuscaHotel_Web.Controllers
                 }
             }
 
+            TempData["error"] = "Erro encontrado";
             return View(model);
         }
 
@@ -104,9 +107,10 @@ namespace BuscaHotel_Web.Controllers
                 var response = await _hotelService.DeleteAsync<APIResponse>(model.Id);
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = "Hotel deletado com sucesso";
                     return RedirectToAction(nameof(IndexHotel));
                 }
-            
+            TempData["error"] = "Erro encontrado";
 
             return View(model);
         }
