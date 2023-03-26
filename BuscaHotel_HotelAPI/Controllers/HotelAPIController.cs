@@ -4,6 +4,7 @@ using BuscaHotel_HotelAPI.Logging;
 using BuscaHotel_HotelAPI.Models;
 using BuscaHotel_HotelAPI.Models.Dto;
 using BuscaHotel_HotelAPI.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +34,9 @@ namespace BuscaHotel_HotelAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
         public async Task<ActionResult<APIResponse>> GetHoteis()
@@ -55,7 +59,10 @@ namespace BuscaHotel_HotelAPI.Controllers
 
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("{id:int}", Name = "GetHotel")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -128,9 +135,12 @@ namespace BuscaHotel_HotelAPI.Controllers
         }
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id:int}", Name = "DeleteHotel")]
+        [Authorize(Roles = "CUSTOM")]
 
         public async Task<ActionResult<APIResponse>> DeleteHotel(int id)
         {

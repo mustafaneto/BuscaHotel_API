@@ -7,6 +7,7 @@ namespace BuscaHotel_HotelAPI.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
+        public DbSet<LocalUser> LocalUsers { get; set; }
         public DbSet<Hotel> Hoteis { get; set; }
         public DbSet<HotelNumber> HotelNumbers { get; set; }
 
