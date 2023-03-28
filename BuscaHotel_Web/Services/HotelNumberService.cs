@@ -3,6 +3,7 @@ using BuscaHotel_Web.Models;
 using BuscaHotel_Web.Models.Dto;
 using BuscaHotel_Web.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace BuscaHotel_Web.Services
 {
@@ -17,50 +18,55 @@ namespace BuscaHotel_Web.Services
             hotelUrl = configuration.GetValue<string>("ServiceUrls:HotelAPI");
         }
 
-        public Task<T> CreateAsync<T>(HotelNumberCreateDTO dto)
+        public Task<T> CreateAsync<T>(HotelNumberCreateDTO dto, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = dto,
-                Url = hotelUrl + "/api/hotelNumberAPI"
+                Url = hotelUrl + "/api/hotelNumberAPI",
+                Token = token
             });
         }
 
-        public Task<T> DeleteAsync<T>(int id)
+        public Task<T> DeleteAsync<T>(int id, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.DELETE,
-                Url = hotelUrl + "/api/hotelNumberAPI/" + id
+                Url = hotelUrl + "/api/hotelNumberAPI/" + id,
+                Token = token
             });
         }
 
-        public Task<T> GetAllAsync<T>()
+        public Task<T> GetAllAsync<T>(string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = hotelUrl + "/api/hotelNumberAPI"
+                Url = hotelUrl + "/api/hotelNumberAPI",
+                Token = token
             });
         }
 
-        public Task<T> GetAsync<T>(int id)
+        public Task<T> GetAsync<T>(int id, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = hotelUrl + "/api/hotelNumberAPI/" + id
+                Url = hotelUrl + "/api/hotelNumberAPI/" + id,
+                Token = token
             });
         }
 
-        public Task<T> UpdateAsync<T>(HotelNumberUpdateDTO dto)
+        public Task<T> UpdateAsync<T>(HotelNumberUpdateDTO dto, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.PUT,
                 Data = dto,
-                Url = hotelUrl + "/api/hotelNumberAPI/" + dto.HotelNo
+                Url = hotelUrl + "/api/hotelNumberAPI/" + dto.HotelNo,
+                Token = token
             });
         }
     }

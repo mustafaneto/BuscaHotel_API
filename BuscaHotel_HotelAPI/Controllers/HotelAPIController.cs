@@ -34,7 +34,6 @@ namespace BuscaHotel_HotelAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -59,7 +58,7 @@ namespace BuscaHotel_HotelAPI.Controllers
 
         }
 
-        [Authorize(Roles = "admin")]
+        
         [HttpGet("{id:int}", Name = "GetHotel")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -99,6 +98,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -140,7 +140,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpDelete("{id:int}", Name = "DeleteHotel")]
-        [Authorize(Roles = "CUSTOM")]
+        [Authorize(Roles = "admin")]
 
         public async Task<ActionResult<APIResponse>> DeleteHotel(int id)
         {
@@ -170,6 +170,7 @@ namespace BuscaHotel_HotelAPI.Controllers
         }
 
 
+        [Authorize(Roles = "admin")]
         [HttpPut("{id:int}", Name = "UpdateHotel")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

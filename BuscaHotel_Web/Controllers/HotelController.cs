@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using BuscaHotel_Utility;
 using BuscaHotel_Web.Models;
 using BuscaHotel_Web.Models.Dto;
 using BuscaHotel_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -23,7 +25,7 @@ namespace BuscaHotel_Web.Controllers
         {
             List<HotelDTO> list = new();
 
-            var response = await _hotelService.GetAllAsync<APIResponse>();
+            var response = await _hotelService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<HotelDTO>>(Convert.ToString(response.Result));
@@ -32,11 +34,13 @@ namespace BuscaHotel_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateHotel()
         {
             return View();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
 
@@ -44,7 +48,7 @@ namespace BuscaHotel_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _hotelService.CreateAsync<APIResponse>(model);
+                var response = await _hotelService.CreateAsync<APIResponse>(model, HttpContext.Session.GetString(SD.SessionToken));
                 if (response != null && response.IsSuccess)
                 {
                     TempData["success"] = "Hotel criado com sucesso";
@@ -55,9 +59,10 @@ namespace BuscaHotel_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateHotel(int hotelId)
         {
-            var response = await _hotelService.GetAsync<APIResponse>(hotelId);
+            var response = await _hotelService.GetAsync<APIResponse>(hotelId, HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 HotelDTO model = JsonConvert.DeserializeObject<HotelDTO>(Convert.ToString(response.Result));
@@ -67,6 +72,7 @@ namespace BuscaHotel_Web.Controllers
             return NotFound();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
 
@@ -75,7 +81,7 @@ namespace BuscaHotel_Web.Controllers
             if (ModelState.IsValid)
             {
                 TempData["success"] = "Hotel atualizado com sucesso";
-                var response = await _hotelService.UpdateAsync<APIResponse>(model);
+                var response = await _hotelService.UpdateAsync<APIResponse>(model, HttpContext.Session.GetString(SD.SessionToken));
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(IndexHotel));
@@ -86,9 +92,10 @@ namespace BuscaHotel_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteHotel(int hotelId)
         {
-            var response = await _hotelService.GetAsync<APIResponse>(hotelId);
+            var response = await _hotelService.GetAsync<APIResponse>(hotelId, HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 HotelDTO model = JsonConvert.DeserializeObject<HotelDTO>(Convert.ToString(response.Result));
@@ -98,13 +105,14 @@ namespace BuscaHotel_Web.Controllers
             return NotFound();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
 
         public async Task<IActionResult> DeleteHotel(HotelDTO model)
         {
             
-                var response = await _hotelService.DeleteAsync<APIResponse>(model.Id);
+                var response = await _hotelService.DeleteAsync<APIResponse>(model.Id, HttpContext.Session.GetString(SD.SessionToken));
                 if (response != null && response.IsSuccess)
                 {
                     TempData["success"] = "Hotel deletado com sucesso";

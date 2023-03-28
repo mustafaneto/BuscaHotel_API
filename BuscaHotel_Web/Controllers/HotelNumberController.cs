@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
+using BuscaHotel_Utility;
 using BuscaHotel_Web.Models;
 using BuscaHotel_Web.Models.Dto;
 using BuscaHotel_Web.Models.VM;
 using BuscaHotel_Web.Services;
 using BuscaHotel_Web.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Data;
 
 namespace BuscaHotel_Web.Controllers
 {
@@ -28,7 +31,7 @@ namespace BuscaHotel_Web.Controllers
         {
             List<HotelNumberDTO> list = new();
 
-            var response = await _hotelNumberService.GetAllAsync<APIResponse>();
+            var response = await _hotelNumberService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<HotelNumberDTO>>(Convert.ToString(response.Result));
@@ -37,10 +40,11 @@ namespace BuscaHotel_Web.Controllers
             return View(list);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateHotelNumber()
         {
             HotelNumberCreateVM hotelNumberVM = new();
-            var response = await _hotelService.GetAllAsync<APIResponse>();
+            var response = await _hotelService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 hotelNumberVM.HotelList = JsonConvert.DeserializeObject<List<HotelDTO>>
@@ -53,6 +57,7 @@ namespace BuscaHotel_Web.Controllers
             return View(hotelNumberVM);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
 
@@ -60,7 +65,7 @@ namespace BuscaHotel_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var response = await _hotelNumberService.CreateAsync<APIResponse>(model.HotelNumber);
+                var response = await _hotelNumberService.CreateAsync<APIResponse>(model.HotelNumber, HttpContext.Session.GetString(SD.SessionToken));
                 if (response != null && response.IsSuccess)
                 {
                     TempData["success"] = "Número criado com sucesso";
@@ -75,7 +80,7 @@ namespace BuscaHotel_Web.Controllers
                 }
             }
 
-            var resp = await _hotelService.GetAllAsync<APIResponse>();
+            var resp = await _hotelService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
             if (resp != null && resp.IsSuccess)
             {
                 model.HotelList = JsonConvert.DeserializeObject<List<HotelDTO>>
@@ -90,17 +95,18 @@ namespace BuscaHotel_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateHotelNumber(int hotelNo)
         {
             HotelNumberUpdateVM hotelNumberVM = new();
-            var response = await _hotelNumberService.GetAsync<APIResponse>(hotelNo);
+            var response = await _hotelNumberService.GetAsync<APIResponse>(hotelNo, HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 HotelNumberDTO model = JsonConvert.DeserializeObject<HotelNumberDTO>(Convert.ToString(response.Result));
                 hotelNumberVM.HotelNumber = _mapper.Map<HotelNumberUpdateDTO>(model);
             }
 
-            response = await _hotelService.GetAllAsync<APIResponse>();
+            response = await _hotelService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 hotelNumberVM.HotelList = JsonConvert.DeserializeObject<List<HotelDTO>>
@@ -115,6 +121,7 @@ namespace BuscaHotel_Web.Controllers
             return NotFound();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
 
@@ -123,7 +130,7 @@ namespace BuscaHotel_Web.Controllers
             if (ModelState.IsValid)
             {
                 TempData["success"] = "Número atualizado com sucesso";
-                var response = await _hotelNumberService.UpdateAsync<APIResponse>(model.HotelNumber);
+                var response = await _hotelNumberService.UpdateAsync<APIResponse>(model.HotelNumber, HttpContext.Session.GetString(SD.SessionToken));
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(IndexHotelNumber));
@@ -137,7 +144,7 @@ namespace BuscaHotel_Web.Controllers
                 }
             }
 
-            var resp = await _hotelService.GetAllAsync<APIResponse>();
+            var resp = await _hotelService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
             if (resp != null && resp.IsSuccess)
             {
                 model.HotelList = JsonConvert.DeserializeObject<List<HotelDTO>>
@@ -152,17 +159,18 @@ namespace BuscaHotel_Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteHotelNumber(int hotelNo)
         {
             HotelNumberDeleteVM hotelNumberVM = new();
-            var response = await _hotelNumberService.GetAsync<APIResponse>(hotelNo);
+            var response = await _hotelNumberService.GetAsync<APIResponse>(hotelNo, HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 HotelNumberDTO model = JsonConvert.DeserializeObject<HotelNumberDTO>(Convert.ToString(response.Result));
                 hotelNumberVM.HotelNumber = model;
             }
 
-            response = await _hotelService.GetAllAsync<APIResponse>();
+            response = await _hotelService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 hotelNumberVM.HotelList = JsonConvert.DeserializeObject<List<HotelDTO>>
@@ -177,13 +185,14 @@ namespace BuscaHotel_Web.Controllers
             return NotFound();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
 
         public async Task<IActionResult> DeleteHotelNumber(HotelNumberDeleteVM model)
         {
 
-            var response = await _hotelNumberService.DeleteAsync<APIResponse>(model.HotelNumber.HotelNo);
+            var response = await _hotelNumberService.DeleteAsync<APIResponse>(model.HotelNumber.HotelNo, HttpContext.Session.GetString(SD.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Número deletado com sucesso";

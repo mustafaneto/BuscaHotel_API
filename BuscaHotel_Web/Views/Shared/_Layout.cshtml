@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using BuscaHotel_Utility;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor httpAcc
+
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
@@ -28,8 +31,24 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Hotel" asp-action="IndexHotel">Hotel</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="HotelNumber" asp-action="IndexHotelNumber">Cadastro</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="HotelNumber" asp-action="IndexHotelNumber">Registro Hotel</a>
                         </li>
+
+                        @if (httpAcc.HttpContext.Session.GetString(SD.SessionToken) != null && 
+                        httpAcc.HttpContext.Session.GetString(SD.SessionToken).ToString().Length>0 ) 
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Auth" asp-action="Logout">Sair</a>
+                            </li>
+                        } else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Auth" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Auth" asp-action="Register">Nova Conta</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
