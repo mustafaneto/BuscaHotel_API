@@ -13,10 +13,11 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Reflection.Metadata.Ecma335;
 
-namespace BuscaHotel_HotelAPI.Controllers
+namespace BuscaHotel_HotelAPI.Controllers.v1
 {
-    [Route("api/HotelAPI")]
+    [Route("api/v{version:apiVersion}/HotelAPI")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class HotelAPIController : ControllerBase
     {
         private readonly ILogging _logger;
@@ -30,7 +31,7 @@ namespace BuscaHotel_HotelAPI.Controllers
             _dbHotel = dbHotel;
             _logger = logger;
             _mapper = mapper;
-            this._response = new();
+            _response = new();
         }
 
         [HttpGet]
@@ -58,7 +59,7 @@ namespace BuscaHotel_HotelAPI.Controllers
 
         }
 
-        
+
         [HttpGet("{id:int}", Name = "GetHotel")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

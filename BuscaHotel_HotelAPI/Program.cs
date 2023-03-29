@@ -5,6 +5,7 @@ using BuscaHotel_HotelAPI.Logging;
 using BuscaHotel_HotelAPI.Repository;
 using BuscaHotel_HotelAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -22,7 +23,17 @@ builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IHotelNumberRepository, HotelNumberRepository>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
-
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+});
+builder.Services.AddVersionedApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");
 
 builder.Services.AddAuthentication(x =>
@@ -78,6 +89,28 @@ builder.Services.AddSwaggerGen(options =>
             new List<string>()
         }
     });
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1.0",
+        Title = "Busca Hotel V1",
+        Description = "API para gerenciamento de Hotéis",
+        Contact = new OpenApiContact
+        {
+            Name = "Mustafa Neto",
+            Url = new Uri("https://mustafaneto.github.io")
+        }
+    });
+    options.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "v2.0",
+        Title = "Busca Hotel V2",
+        Description = "API para gerenciamento de Hotéis",
+        Contact = new OpenApiContact
+        {
+            Name = "Mustafa Neto",
+            Url = new Uri("https://mustafaneto.github.io")
+        }
+    });
 });
 builder.Services.AddSingleton<ILogging, Logging>();
 
@@ -87,7 +120,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Busca_HotelV1");
+        options.SwaggerEndpoint("/swagger/v2/swagger.json", "Busca_HotelV2");
+    });
 }
 
 app.UseHttpsRedirection();

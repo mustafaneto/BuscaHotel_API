@@ -22,7 +22,7 @@ namespace BuscaHotel_Web.Services
             {
                 ApiType = SD.ApiType.POST,
                 Data = obj,
-                Url = hotelUrl + "/api/UserAuth/login"
+                Url = hotelUrl + "/api/v1/UserAuth/login"
             });
         }
 
@@ -32,7 +32,7 @@ namespace BuscaHotel_Web.Services
             {
                 ApiType = SD.ApiType.POST,
                 Data = obj,
-                Url = hotelUrl + "/api/UserAuth/register"
+                Url = hotelUrl + "/api/v1/UserAuth/register"
             });
         }
     }

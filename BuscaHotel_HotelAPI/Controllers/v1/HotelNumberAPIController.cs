@@ -14,10 +14,12 @@ using System.Data;
 using System.Net;
 using System.Reflection.Metadata.Ecma335;
 
-namespace BuscaHotel_HotelAPI.Controllers
+namespace BuscaHotel_HotelAPI.Controllers.v1
 {
-    [Route("api/HotelNumberAPI")]
+    [Route("api/v{version:apiVersion}/HotelNumberAPI")]
     [ApiController]
+    [ApiVersion("1.0")]
+
     public class HotelNumberAPIController : ControllerBase
     {
         private readonly ILogging _logger;
@@ -32,11 +34,19 @@ namespace BuscaHotel_HotelAPI.Controllers
             _dbHotelNumber = dbHotelNumber;
             _logger = logger;
             _mapper = mapper;
-            this._response = new();
+            _response = new();
             _dbHotel = dbHotel;
         }
 
+        [HttpGet("GetString")]
+
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "String1", "String2" };
+        }
+
         [HttpGet]
+        //[MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
         public async Task<ActionResult<APIResponse>> GetHotelNumbers()
@@ -44,7 +54,7 @@ namespace BuscaHotel_HotelAPI.Controllers
             try
             {
                 _logger.Log("Exibindo todos os hoteis", "");
-                IEnumerable<HotelNumber> hotelNumberList = await _dbHotelNumber.GetAllAsync(includeProperties:"Hotel");
+                IEnumerable<HotelNumber> hotelNumberList = await _dbHotelNumber.GetAllAsync(includeProperties: "Hotel");
                 _response.Result = _mapper.Map<List<HotelNumberDTO>>(hotelNumberList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);

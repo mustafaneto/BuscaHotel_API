@@ -23,7 +23,7 @@ namespace BuscaHotel_Web.Services
             {
                 ApiType = SD.ApiType.POST,
                 Data = dto,
-                Url = hotelUrl + "/api/hotelAPI",
+                Url = hotelUrl + "/api/v1/hotelAPI",
                 Token = token
             });
         }
@@ -33,7 +33,7 @@ namespace BuscaHotel_Web.Services
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.DELETE,
-                Url = hotelUrl + "/api/hotelAPI/"+ id,
+                Url = hotelUrl + "/api/v1/hotelAPI/" + id,
                 Token = token
             });
         }
@@ -43,7 +43,7 @@ namespace BuscaHotel_Web.Services
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = hotelUrl + "/api/hotelAPI",
+                Url = hotelUrl + "/api/v1/hotelAPI",
                 Token = token
             });
         }
@@ -53,7 +53,7 @@ namespace BuscaHotel_Web.Services
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = hotelUrl + "/api/hotelAPI/" + id,
+                Url = hotelUrl + "/api/v1/hotelAPI/" + id,
                 Token = token
             });
         }
@@ -64,7 +64,7 @@ namespace BuscaHotel_Web.Services
             {
                 ApiType = SD.ApiType.PUT,
                 Data = dto,
-                Url = hotelUrl + "/api/hotelAPI/" + dto.Id,
+                Url = hotelUrl + "/api/v1/hotelAPI/" + dto.Id,
                 Token = token
             });
         }
