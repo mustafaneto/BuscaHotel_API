@@ -35,16 +35,33 @@ namespace BuscaHotel_HotelAPI.Controllers.v1
         }
 
         [HttpGet]
+        //[ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(CacheProfileName = "Default30")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public async Task<ActionResult<APIResponse>> GetHoteis()
+        public async Task<ActionResult<APIResponse>> GetHoteis([FromQuery(Name = "filtroOcupacao")]int? ocupacao, [FromQuery] string? search)
         {
             try
             {
                 _logger.Log("Exibindo todos os hoteis", "");
-                IEnumerable<Hotel> hotelList = await _dbHotel.GetAllAsync();
+                IEnumerable<Hotel> hotelList;
+                
+                if(ocupacao > 0)
+                {
+                    hotelList = await _dbHotel.GetAllAsync(u => u.Ocupacao == ocupacao);
+                }
+                else
+                {
+                    hotelList = await _dbHotel.GetAllAsync();
+                }
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    hotelList = hotelList.Where(u => u.Descricao.ToLower().Contains(search) || u.Nome.ToLower().Contains(search));
+                }
+              
                 _response.Result = _mapper.Map<List<HotelDTO>>(hotelList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
@@ -66,6 +83,7 @@ namespace BuscaHotel_HotelAPI.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ResponseCache(Duration = 30)]
 
         public async Task<ActionResult<APIResponse>> GetHotel(int id)
         {
