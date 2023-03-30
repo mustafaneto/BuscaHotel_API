@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Reflection.Metadata.Ecma335;
+using System.Text.Json;
 
 namespace BuscaHotel_HotelAPI.Controllers.v1
 {
@@ -41,7 +42,7 @@ namespace BuscaHotel_HotelAPI.Controllers.v1
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public async Task<ActionResult<APIResponse>> GetHoteis([FromQuery(Name = "filtroOcupacao")]int? ocupacao, [FromQuery] string? search)
+        public async Task<ActionResult<APIResponse>> GetHoteis([FromQuery(Name = "filtroOcupacao")]int? ocupacao, [FromQuery] string? search, int pageSize = 0, int pageNumber = 1)
         {
             try
             {
@@ -50,18 +51,20 @@ namespace BuscaHotel_HotelAPI.Controllers.v1
                 
                 if(ocupacao > 0)
                 {
-                    hotelList = await _dbHotel.GetAllAsync(u => u.Ocupacao == ocupacao);
+                    hotelList = await _dbHotel.GetAllAsync(u => u.Ocupacao == ocupacao, pageSize:pageSize, pageNumber:pageNumber);
                 }
                 else
                 {
-                    hotelList = await _dbHotel.GetAllAsync();
+                    hotelList = await _dbHotel.GetAllAsync(pageSize: pageSize, pageNumber: pageNumber);
                 }
 
                 if (!string.IsNullOrEmpty(search))
                 {
                     hotelList = hotelList.Where(u => u.Descricao.ToLower().Contains(search) || u.Nome.ToLower().Contains(search));
                 }
+                Pagination pagination = new() { PageNumber = pageNumber, PageSize = pageSize };
               
+                Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagination));
                 _response.Result = _mapper.Map<List<HotelDTO>>(hotelList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);

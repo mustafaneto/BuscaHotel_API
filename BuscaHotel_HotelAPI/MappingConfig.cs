@@ -17,6 +17,7 @@ namespace BuscaHotel_HotelAPI
             CreateMap<HotelNumber, HotelNumberDTO>().ReverseMap();
             CreateMap<HotelNumber, HotelNumberCreateDTO>().ReverseMap();
             CreateMap<HotelNumber, HotelNumberUpdateDTO>().ReverseMap();
+            CreateMap<ApplicationUser, UserDTO>().ReverseMap();
         }
     }
 }

@@ -2,9 +2,11 @@
 using BuscaHotel_HotelAPI;
 using BuscaHotel_HotelAPI.Data;
 using BuscaHotel_HotelAPI.Logging;
+using BuscaHotel_HotelAPI.Models;
 using BuscaHotel_HotelAPI.Repository;
 using BuscaHotel_HotelAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -19,6 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddResponseCaching();
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

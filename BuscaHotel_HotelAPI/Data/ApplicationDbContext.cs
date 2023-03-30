@@ -1,11 +1,14 @@
 ﻿using BuscaHotel_HotelAPI.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuscaHotel_HotelAPI.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public DbSet<LocalUser> LocalUsers { get; set; }
         public DbSet<Hotel> Hoteis { get; set; }
@@ -14,6 +17,7 @@ namespace BuscaHotel_HotelAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Hotel>().HasData(
                 new Hotel
                 {
